@@ -267,7 +267,14 @@ async fn select(
               JsonValue::Null
             }
           }
-          "INT" | "INT UNSIGNED" | "NUMBER" | "INTEGER" | "BIGINT" | "BIGINT UNSIGNED" | "MEDIUMINT" | "MEDIUMINT UNSIGNED" | "SMALLINT" | "SMALLINT UNSIGNED" | "TINYINT" | "INT8" => {
+          "INT" | "NUMBER" | "INTEGER" | "BIGINT" | "MEDIUMINT" | "SMALLINT" | "TINYINT" | "INT8" => {
+            if let Ok(n) = row.try_get::<i64, usize>(i) {
+              JsonValue::Number(n.into())
+            } else {
+              JsonValue::Null
+            }
+          }
+          "INT UNSIGNED" | "BIGINT UNSIGNED" | "MEDIUMINT UNSIGNED" | "SMALLINT UNSIGNED" | "TINYINT UNSIGNED" => {
             if let Ok(n) = row.try_get::<u64, usize>(i) {
               JsonValue::Number(n.into())
             } else {
