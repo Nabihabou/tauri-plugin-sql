@@ -247,6 +247,7 @@ async fn select(
   for row in rows {
     let mut value = HashMap::default();
     for (i, column) in row.columns().iter().enumerate() {
+      println!("{:?}", info.name());
       let info = column.type_info();
       let v = if info.is_null() {
         JsonValue::Null
@@ -263,11 +264,11 @@ async fn select(
             if let Ok(b) = row.try_get(i) {
               JsonValue::Bool(b)
             } else {
-              let x: String = row.get(i);
-              JsonValue::Bool(x.to_lowercase() == "true")
+              JsonValue::Null
             }
           }
-          "INT" | "NUMBER" | "INTEGER" | "BIGINT" | "INT8" => {
+          "INT" | "UNSIGNED INT" | "NUMBER" | "INTEGER" | "BIGINT" | "BIGINT UNSIGNED" | 
+          "MEDIUMINT" | "MEDIUMINT UNSIGNED" | "SMALLINT" | "SMALLINT UNSIGNED" | "TINYINT" | "INT8" => {
             if let Ok(n) = row.try_get::<i64, usize>(i) {
               JsonValue::Number(n.into())
             } else {
